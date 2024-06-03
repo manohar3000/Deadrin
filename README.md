@@ -17,7 +17,12 @@ Deadrin is a simple neural network library that computes gradients without using
 
 
 ## Dependencies
-- [numpy](https://numpy.org/install/) 
+- [numpy](https://numpy.org/install/)
+
+## Installation
+```shell
+pip install deadrin
+```
 
 ## Demo
  ```python
