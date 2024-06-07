@@ -1,10 +1,12 @@
 import numpy as np
+import sys
 class Dense():
-    def __init__(self, no_of_neurons, input_size=1, activation='linear', gain=1):
+    def __init__(self, no_of_neurons, input_size=1, activation='linear', negative_slope=0.0, gain=1):
         self.no_of_neurons=no_of_neurons
         self.input_size=input_size
         self.activation=activation
         self.gain=gain
+        self.negative_slope = negative_slope
 
         self.weights=np.random.randn(input_size,no_of_neurons) * (gain/(input_size)**0.5)
         self.biases=np.zeros((1,no_of_neurons))
@@ -20,6 +22,8 @@ class Dense():
             case "relu": return self.relu(z)
             case "tanh": return self.tanh(z)
             case "softmax": return self.softmax(z)
+            case "leaky_relu": return self.leaky_relu(z)
+            case _: sys.exit("Specify a valid activation function(linear || sigmoid || relu || tanh || softmax || leaky_relu)")
 
     def gradient_descent(self,lr):
         for i in range(len(self.weights)):
@@ -45,6 +49,10 @@ class Dense():
         activations = expo / np.sum(expo, axis=1, keepdims=True)
         return activations
 
+    def leaky_relu(self, inputs):
+        activations = np.where(inputs > 0, inputs, self.negative_slope * inputs)
+        return activations
+
 
 class Network():
     def __init__(self, layers):
@@ -59,7 +67,7 @@ class Network():
             inputs=layer.forward(inputs)
         return inputs
 
-    def compile(self, loss, lr):
+    def compile(self, loss="mse", lr=0.01):
         self.loss=loss
         self.lr=lr
 
